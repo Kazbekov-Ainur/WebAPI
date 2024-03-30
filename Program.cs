@@ -1,5 +1,10 @@
+using Microsoft.AspNetCore.OData;
+using Microsoft.AspNetCore.OData.Query.Expressions;
 using Microsoft.EntityFrameworkCore;
+using System.Reflection.Emit;
 using WebAPI.Models;
+//using ModelBuilder = WebAPI.Models.ModelBuilder1;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -7,6 +12,14 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddDbContext<NoteContext>(x => x.UseNpgsql(builder.Configuration.GetConnectionString("DbCon")));
 
+//builder.Services.AddControllers().
+//    AddOData(opt => opt.EnableQueryFeatures()
+//    .Count().Filter().OrderBy().Expand().Select().SetMaxTop(10)
+//    .AddRouteComponents(
+//        routePrefix: "odata",
+//        model: ModelBuilder1.GetEdmModel()
+
+//        ));
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle

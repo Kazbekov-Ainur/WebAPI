@@ -1,6 +1,6 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using WebAPI.Models;
+using Microsoft.AspNetCore.OData.Query;
 
 namespace WebAPI.Controllers
 {
@@ -15,15 +15,48 @@ namespace WebAPI.Controllers
             this.noteContext = noteContext;
         }
 
-        [HttpGet]
-        [Route("GetNotes")]
-        public List<Note> GetNotes()
+		[HttpGet]
+		[EnableQuery]
+		[Route("Получение списка заметок")]
+		public IQueryable<Note> GetNotes()
+		{
+			return noteContext.Notes.AsQueryable();
+		}
+
+		[HttpGet]
+        [EnableQuery]
+        [Route("Сортировка по ID")]
+        public IQueryable<Note> GetNotesId()
         {
-            return noteContext.Notes.ToList();
+            return noteContext.Notes.AsQueryable().OrderBy(x => x.Id);
         }
 
-        [HttpPost]
-        [Route("AddNote")]
+		[HttpGet]
+		[EnableQuery]
+		[Route("Сортировка по Заголовку")]
+		public IQueryable<Note> GetNotesSortTitle()
+		{
+			return noteContext.Notes.AsQueryable().OrderBy(x => x.Title);
+		}
+
+		[HttpGet]
+		[EnableQuery]
+		[Route("Сортировка по Описанию")]
+		public IQueryable<Note> GetNotesSortBody()
+		{
+			return noteContext.Notes.AsQueryable().OrderBy(x => x.Body);
+		}
+
+		[HttpGet]
+		[EnableQuery]
+		[Route("Сортировка по дате и времени создания")]
+		public IQueryable<Note> GetNotesSortDate()
+		{
+			return noteContext.Notes.AsQueryable().OrderBy(x => x.CreatedDate);
+		}
+
+		[HttpPost]
+        [Route("Добавление заметки")]
         public string AddNote(Note note)
         {
             string response = string.Empty;
@@ -34,7 +67,7 @@ namespace WebAPI.Controllers
         }
 
         [HttpPut]
-        [Route("EditNote")]
+        [Route("Редактирование заметки")]
         public string EditNote(Note note) 
         {
             noteContext.Entry(note).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
@@ -44,7 +77,7 @@ namespace WebAPI.Controllers
         }
 
         [HttpDelete]
-        [Route("DeleteNote")]
+        [Route("Удаление заметки")]
         public string DeleteNote(int id)
         {
             Note note = noteContext.Notes.Where(x => x.Id == id).FirstOrDefault();
@@ -60,6 +93,5 @@ namespace WebAPI.Controllers
             }
 
         }
-
     }
 }
