@@ -58,11 +58,49 @@ namespace WebAPI.Controllers
 		[EnableQuery]
 		public IQueryable<Note> GetNotes()
 		{
-
 			return _context.Notes.AsQueryable();
 		}
 
-		[HttpGet("SortById")] // Сортировка по Id
+		[HttpGet("FilterByTitle")] // Фильтрация по заголовку
+		[EnableQuery]	
+		public IQueryable<Note> GetNotesFilterByTitle(string title)
+		{
+            var noteFilterByTitle =
+				 from n in _context.Notes
+				 where n.Title == title
+				select n;
+
+            return noteFilterByTitle;
+
+        }
+
+        [HttpGet("FilterByBody")] // Фильтрация по описанию
+        [EnableQuery]
+        public IQueryable<Note> GetNotesFilterByBody(string body)
+        {
+            var noteFilterByBody =
+                 from n in _context.Notes
+                 where n.Body == body
+                 select n;
+
+            return noteFilterByBody;
+
+        }
+
+        [HttpGet("FilterByDateCr")] // Фильтрация по дате и времени создания заметки
+        [EnableQuery]
+        public IQueryable<Note> GetNotesFilterByDateCr(DateTime dateCr)
+        {
+            var noteFilterByDateCr =
+                 from n in _context.Notes
+                 where n.CreatedDate == dateCr
+                 select n;
+
+            return noteFilterByDateCr;
+
+        }
+
+        [HttpGet("SortById")] // Сортировка по Id
 		[EnableQuery]
 		public IQueryable<Note> GetNotesSortId()
 		{
@@ -89,5 +127,6 @@ namespace WebAPI.Controllers
 		{
 			return _context.Notes.AsQueryable().OrderBy(x => x.CreatedDate);
 		}
+
 	}
 }
